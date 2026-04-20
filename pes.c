@@ -145,3 +145,4 @@ int main(int argc, char *argv[]) {
 }
 // Phase 4: cmd_commit - parses -m flag from CLI args
 // Phase 4: pes log verified - walks full commit history
+// Final: all phases complete and tested
