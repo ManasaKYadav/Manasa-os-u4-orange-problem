@@ -272,3 +272,4 @@ int index_add(Index *index, const char *path) {
 // Phase 3: compare_index_entries - sorted index output
 // Phase 3: fix - added missing inttypes.h for SCNu64 PRIu64
 // Phase 3: index_load - parses .pes/index line by line
+// Phase 3: index_save - atomic write with temp+rename
