@@ -224,4 +224,4 @@ int commit_create(const char *message, ObjectID *commit_id_out) {
     free(data);
     
     return head_update(commit_id_out);
-}
+}// Phase 4: head_read - resolves HEAD through symbolic refs
