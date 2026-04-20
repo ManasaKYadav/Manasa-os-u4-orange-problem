@@ -267,3 +267,4 @@ int index_add(Index *index, const char *path) {
     
     return index_save(index);
 }// Phase 3: index_load - parses .pes/index line by line
+// Phase 3: index_save - atomic write with temp+rename
