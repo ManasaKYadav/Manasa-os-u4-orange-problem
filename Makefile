@@ -44,3 +44,4 @@ test-integration: pes
 	@echo "=== Running integration tests ==="
 	bash test_sequence.sh
 // Makefile fix: index.o added to test_tree linker deps
+// Makefile fix: index.o added to test_tree linker deps
