@@ -194,66 +194,34 @@ int head_update(const ObjectID *new_commit) {
 //
 // Returns 0 on success, -1 on error.
 int commit_create(const char *message, ObjectID *commit_id_out) {
-    Index index;
-
-    // Load index
-    if (index_load(&index) != 0) {
-        fprintf(stderr, "error: failed to load index\n");
-        return -1;
-    }
-
-    // Create tree from index
-    ObjectID tree_id;
-    if (tree_from_index(&index, &tree_id) != 0) {
-        fprintf(stderr, "error: failed to create tree\n");
-        return -1;
-    }
-
-    // Prepare commit struct
-    Commit commit;
-    memset(&commit, 0, sizeof(Commit));
-
-    commit.tree = tree_id;
-
-    // Parent commit (if exists)
-    if (head_read(&commit.parent) == 0) {
-        commit.has_parent = 1;
+    Commit c;
+    memset(&c, 0, sizeof(c));
+    
+    if (tree_from_index(&c.tree) != 0) return -1;
+    
+    if (head_read(&c.parent) == 0) {
+        c.has_parent = 1;
     } else {
-        commit.has_parent = 0;
+        c.has_parent = 0;
     }
-
-    // Author
-    const char *author = pes_author();
-    snprintf(commit.author, sizeof(commit.author), "%s", author);
-
-    // Timestamp
-    commit.timestamp = (uint64_t)time(NULL);
-
-    // Message
-    snprintf(commit.message, sizeof(commit.message), "%s", message);
-
-    // Serialize commit
+    
+    strncpy(c.author, pes_author(), sizeof(c.author) - 1);
+    c.author[sizeof(c.author) - 1] = '\0';
+    
+    c.timestamp = (uint64_t)time(NULL);
+    
+    strncpy(c.message, message, sizeof(c.message) - 1);
+    c.message[sizeof(c.message) - 1] = '\0';
+    
     void *data;
     size_t len;
-    if (commit_serialize(&commit, &data, &len) != 0) {
-        fprintf(stderr, "error: failed to serialize commit\n");
-        return -1;
-    }
-
-    // Write commit object
+    if (commit_serialize(&c, &data, &len) != 0) return -1;
+    
     if (object_write(OBJ_COMMIT, data, len, commit_id_out) != 0) {
         free(data);
-        fprintf(stderr, "error: failed to write commit object\n");
         return -1;
     }
-
     free(data);
-
-    // Update HEAD
-    if (head_update(commit_id_out) != 0) {
-        fprintf(stderr, "error: failed to update HEAD\n");
-        return -1;
-    }
-
-    return 0;
+    
+    return head_update(commit_id_out);
 }
