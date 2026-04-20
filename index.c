@@ -266,4 +266,4 @@ int index_add(Index *index, const char *path) {
     entry->path[sizeof(entry->path) - 1] = '\0';
     
     return index_save(index);
-}
+}// Phase 3: index_load - parses .pes/index line by line
