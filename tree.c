@@ -245,3 +245,4 @@ int tree_from_index(ObjectID *id_out) {
 // Phase 2: tree_serialize - sort entries for determinism
 // Phase 2: compare_tree_entries - qsort helper
 // Phase 2: write_tree_level - recursive subtree builder
+// Phase 2: tree_from_index - builds full tree from staged files
