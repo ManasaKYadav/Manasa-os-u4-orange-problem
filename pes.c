@@ -143,3 +143,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+// Phase 4: cmd_commit - parses -m flag from CLI args
