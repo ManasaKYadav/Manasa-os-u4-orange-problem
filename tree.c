@@ -237,3 +237,4 @@ int tree_from_index(ObjectID *id_out) {
     free(idx);
     return rc;
 }// Phase 2: tree_parse - binary format deserialization
+// Phase 2: tree_serialize - sort entries for determinism
