@@ -252,3 +252,4 @@ int object_read(const ObjectID *id, ObjectType *type_out, void **data_out, size_
 // Phase 1: object_read - reads and verifies objects
 // Phase 1: deduplication - skip write if object exists
 // Phase 1: atomic write using mkstemp and rename
+// Phase 1: fsync ensures durability on disk
