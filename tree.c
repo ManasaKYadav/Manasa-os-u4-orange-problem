@@ -238,3 +238,4 @@ int tree_from_index(ObjectID *id_out) {
     return rc;
 }// Phase 2: tree_parse - binary format deserialization
 // Phase 2: tree_serialize - sort entries for determinism
+// Phase 2: compare_tree_entries - qsort helper
