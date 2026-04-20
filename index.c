@@ -8,7 +8,10 @@
 #include <unistd.h>
 #include <dirent.h>
 
-// ─── PROVIDED ────────────────────────────────────────────────────────────────
+// forward declaration
+int object_write(ObjectType type, const void *data, size_t len, ObjectID *id_out);
+
+// ─── PROVIDED ─────────────────────────────────────────
 
 IndexEntry* index_find(Index *index, const char *path) {
     for (int i = 0; i < index->count; i++) {
@@ -81,7 +84,7 @@ int index_status(const Index *index) {
     return 0;
 }
 
-// ─── IMPLEMENTATION ─────────────────────────────────────────────────────────
+// ─── IMPLEMENTATION ─────────────────────────────────
 
 int index_load(Index *index) {
     FILE *f = fopen(".pes/index", "r");
@@ -96,7 +99,7 @@ int index_load(Index *index) {
         IndexEntry entry;
         char hash_hex[HASH_HEX_SIZE + 1];
 
-        if (fscanf(f, "%o %64s %ld %ld %s",
+        if (fscanf(f, "%o %64s %lu %u %s",
                    &entry.mode,
                    hash_hex,
                    &entry.mtime_sec,
@@ -104,7 +107,7 @@ int index_load(Index *index) {
                    entry.path) != 5)
             break;
 
-        hex_to_hash(hash_hex, &entry.id);
+        hex_to_hash(hash_hex, &entry.hash);
         index->entries[index->count++] = entry;
     }
 
@@ -125,9 +128,9 @@ int index_save(const Index *index) {
 
     for (int i = 0; i < temp.count; i++) {
         char hex[HASH_HEX_SIZE + 1];
-        hash_to_hex(&temp.entries[i].id, hex);
+        hash_to_hex(&temp.entries[i].hash, hex);
 
-        fprintf(f, "%o %s %ld %ld %s\n",
+        fprintf(f, "%o %s %lu %u %s\n",
                 temp.entries[i].mode,
                 hex,
                 temp.entries[i].mtime_sec,
@@ -174,13 +177,13 @@ int index_add(Index *index, const char *path) {
     IndexEntry *e = index_find(index, path);
 
     if (e) {
-        e->id = id;
+        e->hash = id;
         e->mtime_sec = st.st_mtime;
         e->size = st.st_size;
         e->mode = st.st_mode;
     } else {
         IndexEntry new_entry;
-        new_entry.id = id;
+        new_entry.hash = id;
         new_entry.mtime_sec = st.st_mtime;
         new_entry.size = st.st_size;
         new_entry.mode = st.st_mode;
