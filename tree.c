@@ -236,4 +236,4 @@ int tree_from_index(ObjectID *id_out) {
     int rc = write_tree_level(idx->entries, idx->count, 0, id_out);
     free(idx);
     return rc;
-}
+}// Phase 2: tree_parse - binary format deserialization
